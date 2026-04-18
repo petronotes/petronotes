@@ -1,0 +1,203 @@
+/* base.css — Reset + Design Tokens for Записки петрофизика */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  hanging-punctuation: first last;
+  scroll-padding-top: var(--space-16);
+}
+
+body {
+  min-height: 100dvh;
+  line-height: 1.6;
+  font-family: var(--font-body, sans-serif);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+img, picture, video, canvas, svg { display: block; max-width: 100%; height: auto; }
+ul[role="list"], ol[role="list"] { list-style: none; }
+input, button, textarea, select { font: inherit; color: inherit; }
+
+h1, h2, h3, h4, h5, h6 { text-wrap: balance; line-height: 1.15; }
+p, li, figcaption { text-wrap: pretty; max-width: 72ch; }
+
+::selection {
+  background: oklch(from var(--color-primary) l c h / 0.25);
+  color: var(--color-text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+button { cursor: pointer; background: none; border: none; }
+table { border-collapse: collapse; width: 100%; }
+
+a, button, [role="button"], [role="link"], input, textarea, select {
+  transition: color var(--transition-interactive),
+              background var(--transition-interactive),
+              border-color var(--transition-interactive),
+              box-shadow var(--transition-interactive);
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;
+}
+
+/* ========== TYPE SCALE ========== */
+:root {
+  --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+  --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+  --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+  --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+  --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+  --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
+  --text-3xl:  clamp(2.5rem,   1rem    + 4vw,    5rem);
+}
+
+/* ========== SPACING ========== */
+:root {
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+}
+
+/* ========== RADIUS / TRANSITIONS / SHADOWS ========== */
+:root {
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+  --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  --content-narrow: 720px;
+  --content-default: 960px;
+  --content-wide: 1200px;
+}
+
+/* ========== GEOLOGICAL PALETTE — LIGHT MODE ========== */
+:root, [data-theme="light"] {
+  --color-bg:             #faf8f5;
+  --color-surface:        #ffffff;
+  --color-surface-2:      #f5f2ed;
+  --color-surface-offset: #eeebe5;
+  --color-surface-dynamic: #e3dfd8;
+  --color-divider:        #d8d4cc;
+  --color-border:         #ccc8bf;
+
+  --color-text:           #2c2a24;
+  --color-text-muted:     #76736a;
+  --color-text-faint:     #aba8a0;
+  --color-text-inverse:   #faf8f5;
+
+  /* Deep teal — geological water/depth */
+  --color-primary:        #1a6b6e;
+  --color-primary-hover:  #0e5255;
+  --color-primary-active: #0a3c3e;
+  --color-primary-highlight: #d1e6e6;
+
+  /* Warm earth accent */
+  --color-accent:         #9b6b3d;
+  --color-accent-hover:   #7d5530;
+  --color-accent-highlight: #ece0d3;
+
+  /* Tags */
+  --color-tag-bg:         #e8e4dc;
+  --color-tag-text:       #5a574f;
+
+  --shadow-sm: 0 1px 2px rgba(44, 42, 36, 0.06);
+  --shadow-md: 0 4px 12px rgba(44, 42, 36, 0.08);
+  --shadow-lg: 0 12px 32px rgba(44, 42, 36, 0.12);
+}
+
+/* ========== GEOLOGICAL PALETTE — DARK MODE ========== */
+[data-theme="dark"] {
+  --color-bg:             #1a1917;
+  --color-surface:        #222120;
+  --color-surface-2:      #2a2928;
+  --color-surface-offset: #1e1d1c;
+  --color-surface-dynamic: #333230;
+  --color-divider:        #3a3937;
+  --color-border:         #454442;
+
+  --color-text:           #d8d5cf;
+  --color-text-muted:     #8a877f;
+  --color-text-faint:     #5e5c56;
+  --color-text-inverse:   #1a1917;
+
+  --color-primary:        #5aafb2;
+  --color-primary-hover:  #3b9497;
+  --color-primary-active: #2b7a7d;
+  --color-primary-highlight: #2a3c3c;
+
+  --color-accent:         #c49460;
+  --color-accent-hover:   #d4a874;
+  --color-accent-highlight: #3a3128;
+
+  --color-tag-bg:         #333230;
+  --color-tag-text:       #aba8a0;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* System preference fallback */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-bg:             #1a1917;
+    --color-surface:        #222120;
+    --color-surface-2:      #2a2928;
+    --color-surface-offset: #1e1d1c;
+    --color-surface-dynamic: #333230;
+    --color-divider:        #3a3937;
+    --color-border:         #454442;
+    --color-text:           #d8d5cf;
+    --color-text-muted:     #8a877f;
+    --color-text-faint:     #5e5c56;
+    --color-text-inverse:   #1a1917;
+    --color-primary:        #5aafb2;
+    --color-primary-hover:  #3b9497;
+    --color-primary-active: #2b7a7d;
+    --color-primary-highlight: #2a3c3c;
+    --color-accent:         #c49460;
+    --color-accent-hover:   #d4a874;
+    --color-accent-highlight: #3a3128;
+    --color-tag-bg:         #333230;
+    --color-tag-text:       #aba8a0;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.4);
+  }
+}
