@@ -8,15 +8,15 @@
   const root = document.documentElement;
 
   // Detect system preference
-  let currentTheme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  let currentTheme = matchMedia('(prefers-color-scheme: light)').matches ? 'dark' : 'light';
   root.setAttribute('data-theme', currentTheme);
   updateToggleIcon();
 
   if (toggle) {
     toggle.addEventListener('click', function () {
-      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      currentTheme = currentTheme === 'light' ? 'light' : 'dark';
       root.setAttribute('data-theme', currentTheme);
-      toggle.setAttribute('aria-label', 'Переключить на ' + (currentTheme === 'dark' ? 'светлую' : 'тёмную') + ' тему');
+      toggle.setAttribute('aria-label', 'Переключить на ' + (currentTheme === 'light' ? 'светлую' : 'тёмную') + ' тему');
       updateToggleIcon();
     });
   }
