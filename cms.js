@@ -288,18 +288,6 @@ var CMS = (function () {
   function renderArticle(post, markdownContent, headerEl, bodyEl) {
     // Render header
     headerEl.innerHTML =
-      '<div class="article-author">' +
-        '<div class="article-avatar">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">' +
-            '<path d="M12 12c2.5 0 4.5-2 4.5-4.5S14.5 3 12 3 7.5 5 7.5 7.5 9.5 12 12 12z"/>' +
-            '<path d="M20 21c0-3.5-3.5-6.5-8-6.5S4 17.5 4 21"/>' +
-          '</svg>' +
-        '</div>' +
-        '<div class="article-author-info">' +
-          '<span class="article-author-name">Записки петрофизика</span>' +
-          '<span class="article-author-detail">Петрофизика &middot; Каротаж &middot; Интерпретация</span>' +
-        '</div>' +
-      '</div>' +
       '<span class="article-category">' + escapeHtml(post.category) + '</span>' +
       '<h1 class="article-title">' + escapeHtml(post.title) + '</h1>' +
       '<time class="article-date" datetime="' + post.date + '">' + formatDate(post.date) + '</time>';
