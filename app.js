@@ -7,16 +7,25 @@
   const toggle = document.querySelector('[data-theme-toggle]');
   const root = document.documentElement;
 
-  // Detect system preference
-  let currentTheme = matchMedia('(prefers-color-scheme: light)').matches ? 'dark' : 'light';
+  // Light theme by default; persist choice in cookie
+  function getThemeCookie() {
+    var m = document.cookie.match(/(?:^|; )theme=(light|dark)/);
+    return m ? m[1] : null;
+  }
+  function setThemeCookie(t) {
+    document.cookie = 'theme=' + t + ';path=/;max-age=31536000;SameSite=Lax';
+  }
+
+  let currentTheme = getThemeCookie() || 'light';
   root.setAttribute('data-theme', currentTheme);
   updateToggleIcon();
 
   if (toggle) {
     toggle.addEventListener('click', function () {
-      currentTheme = currentTheme === 'light' ? 'light' : 'dark';
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
       root.setAttribute('data-theme', currentTheme);
-      toggle.setAttribute('aria-label', 'Переключить на ' + (currentTheme === 'light' ? 'светлую' : 'тёмную') + ' тему');
+      setThemeCookie(currentTheme);
+      toggle.setAttribute('aria-label', 'Переключить на ' + (currentTheme === 'dark' ? 'светлую' : 'тёмную') + ' тему');
       updateToggleIcon();
     });
   }
