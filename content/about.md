@@ -4,8 +4,12 @@
 Здесь описываю только личный опыт и свои инсайты. И стараюсь это делать простыми словами.
 
 - [Телеграм-бот](https://t.me/PetrophysicalBot/) - распознавание мнемоник и расчет УЭС воды
+
+  Книги
 - [Справочник методов ГИС](https://disk.yandex.ru/d/Cjj1LXRWglnccA)
 - [Практическое руководство по интерпретации ГИС](https://disk.yandex.ru/i/_kQbrg5IlCA_bw)
 - [Практическое руководство по нефтегазонасыщенности](https://disk.yandex.ru/i/i3ods4rWkjtrqw)
 - [Карбонаты Восточной Сибири](https://disk.yandex.ru/i/ygvUycOoBQyHUA)
+
+  Статьи
 - [более старые статьи](https://teletype.in/@petro_notes/)
