@@ -1,6 +1,6 @@
 Я нашёл на Авито объявление: продаётся газовое месторождение. Цена - 4.5 млрд. Я не удержался и начал разбираться, что вообще стоит за этой сделкой. И вот как это устроено изнутри.
 
-![Принтскрин с Авито](./content/images/2026-08-02-SaleField/Avito.png "[Объявление на Авито](https://www.avito.ru/moskva/gotoviy_biznes/prodaetsya_gazovoe_mestorozhdenie_7466004755?utm_campaign=native&utm_medium=item_page_android&utm_source=soc_sharing)")
+![Принтскрин с Авито](./content/images/2026-09-13-SaleField/Avito.png "[Объявление на Авито](https://www.avito.ru/moskva/gotoviy_biznes/prodaetsya_gazovoe_mestorozhdenie_7466004755?utm_campaign=native&utm_medium=item_page_android&utm_source=soc_sharing)")
 
 > Все цифры в тексте - модельные оценки, построенные на открытых данных о стоимости бурения, сейсморазведки, ценах на газ и налоговых ставках по состоянию на 2026 год. Это не проектная документация и не инвестиционный меморандум. Реальные затраты зависят от региона, глубины залегания, геологической сложности и десятков других факторов. Не является инвестиционной рекомендацией.
 
