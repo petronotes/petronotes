@@ -1,6 +1,6 @@
 Мне прислали объявление на Авито: продаётся газовое месторождение, цена - 4.5 млрд. Я не удержался и начал разбираться, что вообще нужно делать с месторождением и сколько это стоит.
 
-![Принтскрин с Авито](./content/images/2026-09-13-Prodayotsya-gazovoe-mestorozhdenie/Avito.png "[Объявление на Авито](https://www.avito.ru/moskva/gotoviy_biznes/prodaetsya_gazovoe_mestorozhdenie_7466004755?utm_campaign=native&utm_medium=item_page_android&utm_source=soc_sharing)")
+![Принтскрин с Авито](./content/images/2026-10-04-Prodayotsya-gazovoe-mestorozhdenie/Avito.png "[Объявление на Авито](https://www.avito.ru/moskva/gotoviy_biznes/prodaetsya_gazovoe_mestorozhdenie_7466004755?utm_campaign=native&utm_medium=item_page_android&utm_source=soc_sharing)")
 
 > **Дисклеймер**
 > 
