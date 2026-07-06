@@ -20,7 +20,7 @@
   var editorTextarea = document.getElementById('editorContent');
   var previewContent = document.getElementById('previewContent');
   var editorPane = document.getElementById('editorPane');
-  var previewScroll = document.querySelector('.preview-scroll');
+  var previewPane = document.getElementById('previewPane');
   var htmlOutputOverlay = document.getElementById('htmlOutputOverlay');
   var htmlOutputCode = document.getElementById('htmlOutputCode');
 
@@ -67,118 +67,32 @@
   // Mobile tabs
   var mobileTabs = document.querySelectorAll('.mobile-tab');
 
+  // ========== UPDATE PREVIEW (uses CMS parser) ==========
+  function updatePreview() {
+    editorState.title = titleInput.value;
+    editorState.category = categoryInput.value;
+    editorState.content = editorTextarea.value;
 
-    // ========== SYNC SCROLL: line-based preview rendering ==========
+    var previewHtml = '';
 
-    function renderPreviewWithLineTracking(markdown) {
-        var lines = markdown.split('\n');
-        var blocks = [];
-        var current = [];
-        var currentStart = 0;
-
-        for (var i = 0; i < lines.length; i++) {
-            if (lines[i].trim() === '') {
-                if (current.length) {
-                    blocks.push({ startLine: currentStart, text: current.join('\n') });
-                    current = [];
-                }
-            } else {
-                if (current.length === 0) currentStart = i;
-                current.push(lines[i]);
-            }
-        }
-        if (current.length) blocks.push({ startLine: currentStart, text: current.join('\n') });
-
-        var html = '';
-        blocks.forEach(function (b) {
-            var blockHtml = CMS.parseMarkdown(b.text);
-            if (blockHtml.trim()) {
-                html += '<div class="preview-block" data-line="' + b.startLine + '">' + blockHtml + '</div>';
-            }
-        });
-        return html;
+    if (editorState.category) {
+      previewHtml += '<div style="margin-bottom:var(--space-4);"><span class="article-card-tag" style="display:inline-block;">' + CMS.escapeHtml(editorState.category) + '</span></div>';
     }
 
-    function updatePreview() {
-        editorState.title = titleInput.value;
-        editorState.category = categoryInput.value;
-        editorState.content = editorTextarea.value;
-
-        var previewHtml = '';
-        if (editorState.category) {
-            previewHtml = editorState.content.trim()
-                ? renderPreviewWithLineTracking(editorState.content)
-                : '<p class="placeholder">Начните писать, чтобы увидеть предпросмотр...</p>';
-        }
-        previewContent.innerHTML = previewHtml;
+    if (editorState.title) {
+      previewHtml += '<h1 style="font-family:var(--font-display);font-size:var(--text-2xl);font-weight:700;letter-spacing:-0.02em;line-height:1.12;margin-bottom:var(--space-6);">' + CMS.escapeHtml(editorState.title) + '</h1>';
     }
 
-    // ========== SYNC SCROLL: editor -> preview (line-based) ==========
-
-    var isSyncingScroll = false;
-
-    function getEditorLineHeight() {
-        var style = getComputedStyle(editorTextarea);
-        var lh = parseFloat(style.lineHeight);
-        return lh || parseFloat(style.fontSize) * 1.4 || 20;
+    if (editorState.content) {
+      previewHtml += CMS.parseMarkdown(editorState.content);
     }
 
-    function clearActiveBlockHighlight() {
-        var active = previewContent.querySelector('.preview-block.active-block');
-        if (active) active.classList.remove('active-block');
+    if (!previewHtml) {
+      previewHtml = '<p style="color:var(--color-text-faint);text-align:center;padding:var(--space-12) 0;">Начните писать, чтобы увидеть предпросмотр...</p>';
     }
 
-var cachedLinePositions = null;
-var cachedContentForLines = '';
-
-editorTextarea.addEventListener('scroll', function () {
-    if (isSyncingScroll) return;
-    isSyncingScroll = true;
-
-    if (cachedContentForLines !== editorTextarea.value) {
-        cachedLinePositions = getLineTopPositions(editorTextarea.value);
-        cachedContentForLines = editorTextarea.value;
-    }
-
-    var scrollTop = editorTextarea.scrollTop;
-    var topLine = 0;
-    for (var i = 0; i < cachedLinePositions.length; i++) {
-        if (cachedLinePositions[i] <= scrollTop) topLine = i;
-        else break;
-    }
-
-    var blocks = previewContent.querySelectorAll('[data-line]');
-    var target = null;
-    for (var k = 0; k < blocks.length; k++) {
-        var ln = parseInt(blocks[k].getAttribute('data-line'), 10);
-        if (ln <= topLine) target = blocks[k];
-        else break;
-    }
-
-    if (target) {
-        var scrollRect = previewScroll.getBoundingClientRect();
-        var targetRect = target.getBoundingClientRect();
-        previewScroll.scrollTop += (targetRect.top - scrollRect.top);
-        clearActiveBlockHighlight();
-        target.classList.add('active-block');
-    }
-
-    requestAnimationFrame(function () { isSyncingScroll = false; });
-});
-
-    // ========== SYNC SCROLL: preview -> editor (click on block) ==========
-
-    previewContent.addEventListener('click', function (e) {
-        var block = e.target.closest('[data-line]');
-        if (!block) return;
-
-        var lineHeight = getEditorLineHeight();
-        var targetLine = parseInt(block.getAttribute('data-line'), 10);
-
-        editorTextarea.scrollTop = targetLine * lineHeight;
-        clearActiveBlockHighlight();
-        block.classList.add('active-block');
-    });
+    previewContent.innerHTML = previewHtml;
+  }
 
   // ========== TOOLBAR ACTIONS ==========
   function insertMarkdown(before, after, placeholder) {
@@ -708,49 +622,35 @@ editorTextarea.addEventListener('scroll', function () {
 
   updatePreview();
 
-  var mirrorDiv = null;
+  // ========== SYNC SCROLL: proportional (editor <-> preview) ==========
 
-function getMirrorElement() {
-    if (mirrorDiv) return mirrorDiv;
-    mirrorDiv = document.createElement('div');
-    var style = getComputedStyle(editorTextarea);
-    mirrorDiv.style.position = 'absolute';
-    mirrorDiv.style.visibility = 'hidden';
-    mirrorDiv.style.whiteSpace = 'pre-wrap';
-    mirrorDiv.style.wordWrap = 'break-word';
-    mirrorDiv.style.top = '0';
-    mirrorDiv.style.left = '-9999px';
-    mirrorDiv.style.width = editorTextarea.clientWidth + 'px';
-    mirrorDiv.style.fontFamily = style.fontFamily;
-    mirrorDiv.style.fontSize = style.fontSize;
-    mirrorDiv.style.lineHeight = style.lineHeight;
-    mirrorDiv.style.padding = style.padding;
-    mirrorDiv.style.border = style.border;
-    mirrorDiv.style.boxSizing = style.boxSizing;
-    document.body.appendChild(mirrorDiv);
-    return mirrorDiv;
-}
+    var previewScroll = document.querySelector('.preview-scroll');
+    var isSyncingScroll = false;
 
-function getLineTopPositions(text) {
-    var mirror = getMirrorElement();
-    mirror.style.width = editorTextarea.clientWidth + 'px';
-    var lines = text.split('\n');
-    var html = '';
-    for (var i = 0; i < lines.length; i++) {
-        html += '<span id="mirror-line-' + i + '">' + (lines[i] || ' ') + '</span>\n';
-    }
-    mirror.innerHTML = html;
+    editorTextarea.addEventListener('scroll', function () {
+        if (isSyncingScroll) return;
+        isSyncingScroll = true;
 
-    var positions = [];
-    for (var j = 0; j < lines.length; j++) {
-        var span = mirror.querySelector('#mirror-line-' + j);
-        positions.push(span ? span.offsetTop : 0);
-    }
-    return positions;
-}
-editorTextarea.addEventListener('input', function () {
-    cachedContentForLines = '';
-    clearTimeout(previewTimer);
-    previewTimer = setTimeout(updatePreview, 150);
-});
+        var editorMax = editorTextarea.scrollHeight - editorTextarea.clientHeight;
+        var ratio = editorMax > 0 ? editorTextarea.scrollTop / editorMax : 0;
+
+        var previewMax = previewScroll.scrollHeight - previewScroll.clientHeight;
+        previewScroll.scrollTop = ratio * previewMax;
+
+        requestAnimationFrame(function () { isSyncingScroll = false; });
+    });
+
+    previewScroll.addEventListener('scroll', function () {
+        if (isSyncingScroll) return;
+        isSyncingScroll = true;
+
+        var previewMax = previewScroll.scrollHeight - previewScroll.clientHeight;
+        var ratio = previewMax > 0 ? previewScroll.scrollTop / previewMax : 0;
+
+        var editorMax = editorTextarea.scrollHeight - editorTextarea.clientHeight;
+        editorTextarea.scrollTop = ratio * editorMax;
+
+        requestAnimationFrame(function () { isSyncingScroll = false; });
+    });
+
 })();
