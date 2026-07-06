@@ -144,7 +144,7 @@
         }
 
         if (target) {
-            previewScroll.scrollTop = target.offsetTop - previewContent.offsetTop;
+            previewScroll.scrollTop = target.offsetTop;// - previewContent.offsetTop;
             clearActiveBlockHighlight();
             target.classList.add('active-block');
         }
