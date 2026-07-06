@@ -128,33 +128,43 @@
         if (active) active.classList.remove('active-block');
     }
 
-    editorTextarea.addEventListener('scroll', function () {
-        if (isSyncingScroll) return;
-        isSyncingScroll = true;
-    
-        var lineHeight = getEditorLineHeight();
-        var topLine = Math.round(editorTextarea.scrollTop / lineHeight);
-    
-        var blocks = previewContent.querySelectorAll('[data-line]');
-        var target = null;
-        for (var i = 0; i < blocks.length; i++) {
-            var ln = parseInt(blocks[i].getAttribute('data-line'), 10);
-            if (ln <= topLine) target = blocks[i];
-            else break;
-        }
-    
-        if (target) {
-            var scrollRect = previewScroll.getBoundingClientRect();
-            var targetRect = target.getBoundingClientRect();
-            var currentOffset = targetRect.top - scrollRect.top;
-            previewScroll.scrollTop += currentOffset;
-    
-            clearActiveBlockHighlight();
-            target.classList.add('active-block');
-        }
-    
-        requestAnimationFrame(function () { isSyncingScroll = false; });
-    });
+var cachedLinePositions = null;
+var cachedContentForLines = '';
+
+editorTextarea.addEventListener('scroll', function () {
+    if (isSyncingScroll) return;
+    isSyncingScroll = true;
+
+    if (cachedContentForLines !== editorTextarea.value) {
+        cachedLinePositions = getLineTopPositions(editorTextarea.value);
+        cachedContentForLines = editorTextarea.value;
+    }
+
+    var scrollTop = editorTextarea.scrollTop;
+    var topLine = 0;
+    for (var i = 0; i < cachedLinePositions.length; i++) {
+        if (cachedLinePositions[i] <= scrollTop) topLine = i;
+        else break;
+    }
+
+    var blocks = previewContent.querySelectorAll('[data-line]');
+    var target = null;
+    for (var k = 0; k < blocks.length; k++) {
+        var ln = parseInt(blocks[k].getAttribute('data-line'), 10);
+        if (ln <= topLine) target = blocks[k];
+        else break;
+    }
+
+    if (target) {
+        var scrollRect = previewScroll.getBoundingClientRect();
+        var targetRect = target.getBoundingClientRect();
+        previewScroll.scrollTop += (targetRect.top - scrollRect.top);
+        clearActiveBlockHighlight();
+        target.classList.add('active-block');
+    }
+
+    requestAnimationFrame(function () { isSyncingScroll = false; });
+});
 
     // ========== SYNC SCROLL: preview -> editor (click on block) ==========
 
@@ -698,5 +708,49 @@
 
   updatePreview();
 
+  var mirrorDiv = null;
 
+function getMirrorElement() {
+    if (mirrorDiv) return mirrorDiv;
+    mirrorDiv = document.createElement('div');
+    var style = getComputedStyle(editorTextarea);
+    mirrorDiv.style.position = 'absolute';
+    mirrorDiv.style.visibility = 'hidden';
+    mirrorDiv.style.whiteSpace = 'pre-wrap';
+    mirrorDiv.style.wordWrap = 'break-word';
+    mirrorDiv.style.top = '0';
+    mirrorDiv.style.left = '-9999px';
+    mirrorDiv.style.width = editorTextarea.clientWidth + 'px';
+    mirrorDiv.style.fontFamily = style.fontFamily;
+    mirrorDiv.style.fontSize = style.fontSize;
+    mirrorDiv.style.lineHeight = style.lineHeight;
+    mirrorDiv.style.padding = style.padding;
+    mirrorDiv.style.border = style.border;
+    mirrorDiv.style.boxSizing = style.boxSizing;
+    document.body.appendChild(mirrorDiv);
+    return mirrorDiv;
+}
+
+function getLineTopPositions(text) {
+    var mirror = getMirrorElement();
+    mirror.style.width = editorTextarea.clientWidth + 'px';
+    var lines = text.split('\n');
+    var html = '';
+    for (var i = 0; i < lines.length; i++) {
+        html += '<span id="mirror-line-' + i + '">' + (lines[i] || ' ') + '</span>\n';
+    }
+    mirror.innerHTML = html;
+
+    var positions = [];
+    for (var j = 0; j < lines.length; j++) {
+        var span = mirror.querySelector('#mirror-line-' + j);
+        positions.push(span ? span.offsetTop : 0);
+    }
+    return positions;
+}
+editorTextarea.addEventListener('input', function () {
+    cachedContentForLines = '';
+    clearTimeout(previewTimer);
+    previewTimer = setTimeout(updatePreview, 150);
+});
 })();
