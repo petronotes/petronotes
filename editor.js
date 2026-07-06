@@ -20,7 +20,7 @@
   var editorTextarea = document.getElementById('editorContent');
   var previewContent = document.getElementById('previewContent');
   var editorPane = document.getElementById('editorPane');
-  var previewPane = document.getElementById('previewPane');
+  var previewScroll = document.querySelector('.preview-scroll');
   var htmlOutputOverlay = document.getElementById('htmlOutputOverlay');
   var htmlOutputCode = document.getElementById('htmlOutputCode');
 
@@ -67,32 +67,104 @@
   // Mobile tabs
   var mobileTabs = document.querySelectorAll('.mobile-tab');
 
-  // ========== UPDATE PREVIEW (uses CMS parser) ==========
-  function updatePreview() {
-    editorState.title = titleInput.value;
-    editorState.category = categoryInput.value;
-    editorState.content = editorTextarea.value;
 
-    var previewHtml = '';
+    // ========== SYNC SCROLL: line-based preview rendering ==========
 
-    if (editorState.category) {
-      previewHtml += '<div style="margin-bottom:var(--space-4);"><span class="article-card-tag" style="display:inline-block;">' + CMS.escapeHtml(editorState.category) + '</span></div>';
+    function renderPreviewWithLineTracking(markdown) {
+        var lines = markdown.split('\n');
+        var blocks = [];
+        var current = [];
+        var currentStart = 0;
+
+        for (var i = 0; i < lines.length; i++) {
+            if (lines[i].trim() === '') {
+                if (current.length) {
+                    blocks.push({ startLine: currentStart, text: current.join('\n') });
+                    current = [];
+                }
+            } else {
+                if (current.length === 0) currentStart = i;
+                current.push(lines[i]);
+            }
+        }
+        if (current.length) blocks.push({ startLine: currentStart, text: current.join('\n') });
+
+        var html = '';
+        blocks.forEach(function (b) {
+            var blockHtml = CMS.parseMarkdown(b.text);
+            if (blockHtml.trim()) {
+                html += '<div class="preview-block" data-line="' + b.startLine + '">' + blockHtml + '</div>';
+            }
+        });
+        return html;
     }
 
-    if (editorState.title) {
-      previewHtml += '<h1 style="font-family:var(--font-display);font-size:var(--text-2xl);font-weight:700;letter-spacing:-0.02em;line-height:1.12;margin-bottom:var(--space-6);">' + CMS.escapeHtml(editorState.title) + '</h1>';
+    function updatePreview() {
+        editorState.title = titleInput.value;
+        editorState.category = categoryInput.value;
+        editorState.content = editorTextarea.value;
+
+        var previewHtml = '';
+        if (editorState.category) {
+            previewHtml = editorState.content.trim()
+                ? renderPreviewWithLineTracking(editorState.content)
+                : '<p class="placeholder">Начните писать, чтобы увидеть предпросмотр...</p>';
+        }
+        previewContent.innerHTML = previewHtml;
     }
 
-    if (editorState.content) {
-      previewHtml += CMS.parseMarkdown(editorState.content);
+    // ========== SYNC SCROLL: editor -> preview (line-based) ==========
+
+    var isSyncingScroll = false;
+
+    function getEditorLineHeight() {
+        var style = getComputedStyle(editorTextarea);
+        var lh = parseFloat(style.lineHeight);
+        return lh || parseFloat(style.fontSize) * 1.4 || 20;
     }
 
-    if (!previewHtml) {
-      previewHtml = '<p style="color:var(--color-text-faint);text-align:center;padding:var(--space-12) 0;">Начните писать, чтобы увидеть предпросмотр...</p>';
+    function clearActiveBlockHighlight() {
+        var active = previewContent.querySelector('.preview-block.active-block');
+        if (active) active.classList.remove('active-block');
     }
 
-    previewContent.innerHTML = previewHtml;
-  }
+    editorTextarea.addEventListener('scroll', function () {
+        if (isSyncingScroll) return;
+        isSyncingScroll = true;
+
+        var lineHeight = getEditorLineHeight();
+        var topLine = Math.round(editorTextarea.scrollTop / lineHeight);
+
+        var blocks = previewContent.querySelectorAll('[data-line]');
+        var target = null;
+        for (var i = 0; i < blocks.length; i++) {
+            var ln = parseInt(blocks[i].getAttribute('data-line'), 10);
+            if (ln <= topLine) target = blocks[i];
+            else break;
+        }
+
+        if (target) {
+            previewScroll.scrollTop = target.offsetTop - previewContent.offsetTop;
+            clearActiveBlockHighlight();
+            target.classList.add('active-block');
+        }
+
+        requestAnimationFrame(function () { isSyncingScroll = false; });
+    });
+
+    // ========== SYNC SCROLL: preview -> editor (click on block) ==========
+
+    previewContent.addEventListener('click', function (e) {
+        var block = e.target.closest('[data-line]');
+        if (!block) return;
+
+        var lineHeight = getEditorLineHeight();
+        var targetLine = parseInt(block.getAttribute('data-line'), 10);
+
+        editorTextarea.scrollTop = targetLine * lineHeight;
+        clearActiveBlockHighlight();
+        block.classList.add('active-block');
+    });
 
   // ========== TOOLBAR ACTIONS ==========
   function insertMarkdown(before, after, placeholder) {
@@ -621,5 +693,6 @@
   editorTextarea.value = '## Введение\n\nНейтронный каротаж — один из важнейших методов **геофизических исследований скважин** (ГИС). Он основан на взаимодействии нейтронов с ядрами элементов горных пород.\n\n## Типы нейтронов\n\nРазличают следующие виды нейтронов:\n\n- **Быстрые** > 1 МэВ\n- **Медленные** < 1 МэВ\n- **Тепловые** ~0,025 эВ\n\n> Тепловые нейтроны имеют низкую кинетическую энергию, близкую к температуре окружающей среды. Они находятся в термодинамическом равновесии с окружающей средой.\n\n## Источники нейтронов\n\nДля создания поля нейтронов применяются:\n\n1. Постоянные источники (`Pu239`, `Am241` + `Be9`)\n2. Импульсные генераторы (энергия **14 МэВ**)\n\n### Формулы\n\nРеакция в постоянном источнике:\n\n```\nHe4 + Be9 → C12 + n\n```\n\nГде `n` — испущенный нейтрон.\n\n## Сравнение методов\n\n| Метод | Источник | Детектор |\n|---|---|---|\n| **ННКнт** | Стационарный | Надтепловые нейтроны |\n| **ННКт** | Стационарный | Тепловые нейтроны |\n| **НГК** | Стационарный | Гамма-кванты |\n\n## Заключение\n\nНейтронный каротаж позволяет определять *водородосодержание* горных пород, что является основой для расчёта **коэффициента пористости**.';
 
   updatePreview();
+
 
 })();
