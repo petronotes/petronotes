@@ -131,10 +131,10 @@
     editorTextarea.addEventListener('scroll', function () {
         if (isSyncingScroll) return;
         isSyncingScroll = true;
-
+    
         var lineHeight = getEditorLineHeight();
         var topLine = Math.round(editorTextarea.scrollTop / lineHeight);
-
+    
         var blocks = previewContent.querySelectorAll('[data-line]');
         var target = null;
         for (var i = 0; i < blocks.length; i++) {
@@ -142,13 +142,17 @@
             if (ln <= topLine) target = blocks[i];
             else break;
         }
-
+    
         if (target) {
-            previewScroll.scrollTop = target.offsetTop;// - previewContent.offsetTop;
+            var scrollRect = previewScroll.getBoundingClientRect();
+            var targetRect = target.getBoundingClientRect();
+            var currentOffset = targetRect.top - scrollRect.top;
+            previewScroll.scrollTop += currentOffset;
+    
             clearActiveBlockHighlight();
             target.classList.add('active-block');
         }
-
+    
         requestAnimationFrame(function () { isSyncingScroll = false; });
     });
 
