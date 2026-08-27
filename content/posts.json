@@ -1,5 +1,13 @@
 [
   {
+    "slug": "sovremennaya-avtomatizatsiya",
+    "title": "Современная автоматизация: почему свой макрос это хорошо, а брать чужое - плохо",
+    "date": "2026-10-13",
+    "category": "ИИ",
+    "excerpt": "Последние мои наблюдения за возможностью автоматизировать что-то в геологии и петрофизике по прежнему возвращают меня все к той же теме макросов в Excel. Я всегда именно в этом видел самое главное сок...",
+    "file": "2026-09-05-Macros.md"
+  },
+  {
     "slug": "prodayotsya-gazovoe-mestorozhdenie",
     "title": "Продаётся газовое месторождение",
     "date": "2026-10-04",
@@ -8,20 +16,12 @@
     "file": "2026-10-04-Prodayotsya-gazovoe-mestorozhdenie.md"
   },
   {
-    "slug": "kak-opredelyat-kamni-s-pomoshch-yu-ii-moj-progulochnyj-gajd",
+    "slug": "guide-pro-kamni",
     "title": "Как определять горные породы с помощью ИИ: мой прогулочный гайд",
-    "date": "2026-09-26",
+    "date": "2026-09-12",
     "category": "ИИ",
     "excerpt": "Насколько точен такой способ, я пока не знаю. Но для задачи «пап, а что за камень?» этого вполне достаточно.",
-    "file": "2026-09-26-kak-opredelyat-kamni-s-pomoshch-yu-ii-moj-progulochnyj-gajd.md"
-  },
-  {
-    "slug": "sovremennaya-avtomatizatsiya-pochemu-svoj-makros-eto-khorosho-a-brat-chuzhoe-plokho",
-    "title": "Современная автоматизация: почему свой макрос это хорошо, а брать чужое - плохо",
-    "date": "2026-09-13",
-    "category": "ИИ",
-    "excerpt": "Последние мои наблюдения за возможностью автоматизировать что-то в геологии и петрофизике по прежнему возвращают меня все к той же теме макросов в Excel. Я всегда именно в этом видел самое главное сок...",
-    "file": "2026-09-05-Macros.md"
+    "file": "2026-09-12-guide-pro-kamni.md"
   },
   {
     "slug": "Litho-petro-facies-sequence",
