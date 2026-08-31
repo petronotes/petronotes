@@ -155,7 +155,7 @@
           insertMarkdown('[', '](https://)', 'текст ссылки');
           break;
         case 'image':
-          insertMarkdown('![', '](https://example.com/image.jpg "Подпись к рисунку")', 'описание рисунка');
+          insertMarkdown('![', '](./content/images/folder/image.jpg "Подпись к рисунку")', 'описание рисунка');
           break;
       }
     });
