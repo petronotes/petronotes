@@ -17,3 +17,6 @@
 - [Практическое руководство по нефтегазонасыщенности](https://disk.yandex.ru/i/i3ods4rWkjtrqw)
 - [Карбонаты Восточной Сибири](https://disk.yandex.ru/i/ygvUycOoBQyHUA)
 
+### Контанты
+- [Telegram](https://t.me/avakinshin/)
+- [Почта](mailto:avakinshin@gmail.com)
