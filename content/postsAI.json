@@ -1,16 +1,8 @@
 [
   {
-    "slug": "sovremennaya-avtomatizatsiya",
-    "title": "Не все макросы одинаково полезны",
-    "date": "2026-10-13",
-    "category": "ИИ",
-    "excerpt": "Три вида автоматизации и дал ИИ",
-    "file": "2026-10-13-Macros.md"
-  },
-  {
     "slug": "ii-v-geologii-i-petrofizike",
     "title": "Конспект лекции",
-    "date": "2025-09-14",
+    "date": "2026-09-14",
     "category": "ИИ",
     "excerpt": "На одной из лекций меня спросили: почему для конкретной производственной задачи выбрана именно эта нейронная сеть, а не другая?",
     "file": "2026-11-24-ii-v-geologii-i-petrofizike.md"
