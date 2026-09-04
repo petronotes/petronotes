@@ -110,6 +110,13 @@
   flex-wrap: wrap;
   gap: 16px;
   margin-top: 12px;
+  text-align: center;
+}
+
+.hero-links a:not(:last-child)::after {
+  content: "|";
+  margin-left: 16px;
+  color: #999;
 }
 
 .hero-logo {
