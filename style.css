@@ -105,6 +105,13 @@
   text-align: center;
 }
 
+.hero-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 12px;
+}
+
 .hero-logo {
   display: flex;
   justify-content: center;
