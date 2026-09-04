@@ -108,14 +108,14 @@
 .hero-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  justify-content: center;
+  gap: 14px;
   margin-top: 12px;
-  text-align: center;
 }
 
 .hero-links a:not(:last-child)::after {
   content: "|";
-  margin-left: 16px;
+  margin-left: 14px;
   color: #999;
 }
 
