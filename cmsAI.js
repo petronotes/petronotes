@@ -220,7 +220,8 @@ var CMS = (function () {
   // ========== LOAD POSTS MANIFEST ==========
   function loadManifest(callback) {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', MANIFEST_URL, true);
+    // Fetch a fresh manifest so newly published articles are visible immediately.
+    xhr.open('GET', MANIFEST_URL + '?v=' + Date.now(), true);
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
