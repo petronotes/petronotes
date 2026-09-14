@@ -310,7 +310,7 @@ var CMS = (function () {
     var gridHtml = '';
     related.forEach(function (post) {
       gridHtml +=
-        '<a href="./article.html?slug=' + encodeURIComponent(post.slug) + '" class="related-card">' +
+        '<a href="./articleAI.html?slug=' + encodeURIComponent(post.slug) + '" class="related-card">' +
           '<div class="related-card-tag">' + escapeHtml(post.category) + '</div>' +
           '<h3>' + escapeHtml(post.title) + '</h3>' +
         '</a>';
