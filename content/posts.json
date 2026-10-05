@@ -1,13 +1,5 @@
 [
   {
-    "slug": "gdm-normirovka-na-real-nost",
-    "title": "ГДМ - нормировка на реальность",
-    "date": "2026-11-03",
-    "category": "Геология",
-    "excerpt": "Если посмотреть со стороны на то, как строится ГДМ, у меня возникает впечатление. Давайте по порядку.",
-    "file": "gdm-normirovka-na-real-nost.md"
-  },
-  {
     "slug": "kern-v-UV-svete",
     "title": "Керн в УФ-свете: нефть светится, но не всё светящееся является нефтью",
     "date": "2026-12-15",
@@ -29,7 +21,7 @@
     "date": "2026-11-03",
     "category": "Геология",
     "excerpt": "Если посмотреть со стороны на то, как строится ГДМ, иногда возникает впечатление. Давайте по порядку.",
-    "file": "2026-11-03-gdm-normirovka-na-realnost.md"
+    "file": "gdm-normirovka-na-real-nost.md"
   },
   {
     "slug": "sovremennaya-avtomatizatsiya",
